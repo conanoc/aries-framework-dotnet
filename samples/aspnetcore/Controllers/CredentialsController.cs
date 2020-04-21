@@ -7,7 +7,7 @@ using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Extensions;
 using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Features.IssueCredential;
-using Hyperledger.Aries.Models.Records;
+using Hyperledger.Aries.Routing;
 using Hyperledger.Aries.Storage;
 using Hyperledger.Indy.DidApi;
 using Hyperledger.Indy.LedgerApi;
@@ -25,6 +25,7 @@ namespace WebAgent.Controllers
         private readonly ICredentialService _credentialService;
         private readonly ISchemaService _schemaService;
         private readonly IMessageService _messageService;
+        private readonly IEdgeClientService _edgeClientService;
 
         public CredentialsController(
             IAgentProvider agentContextProvider,
@@ -33,6 +34,7 @@ namespace WebAgent.Controllers
             IConnectionService connectionService,
             ICredentialService credentialService,
             ISchemaService schemaService,
+            IEdgeClientService edgeClientService,
             IMessageService messageService)
         {
             _agentContextProvider = agentContextProvider;
@@ -41,6 +43,7 @@ namespace WebAgent.Controllers
             _connectionService = connectionService;
             _credentialService = credentialService;
             _schemaService = schemaService;
+            _edgeClientService = edgeClientService;
             _messageService = messageService;
         }
 
@@ -48,6 +51,8 @@ namespace WebAgent.Controllers
         public async Task<IActionResult> Index()
         {
             var context = await _agentContextProvider.GetContextAsync();
+            await _edgeClientService.FetchInboxAsync(context);
+
             var credentials = await _credentialService.ListAsync(context);
             var models = new List<CredentialViewModel>();
             foreach ( var c in credentials) {

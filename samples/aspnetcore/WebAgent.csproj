@@ -29,5 +29,6 @@
     <ProjectReference Include="..\..\src\Hyperledger.Aries\Hyperledger.Aries.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
+    <ProjectReference Include="..\..\src\Hyperledger.Aries.Routing.Edge\Hyperledger.Aries.Routing.Edge.csproj" />
   </ItemGroup>
 </Project>

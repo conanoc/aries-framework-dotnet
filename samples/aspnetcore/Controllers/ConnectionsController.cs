@@ -18,6 +18,7 @@ using WebAgent.Messages;
 using WebAgent.Models;
 using WebAgent.Protocols.BasicMessage;
 using Hyperledger.Aries.Extensions;
+using Hyperledger.Aries.Routing;
 
 namespace WebAgent.Controllers
 {
@@ -32,6 +33,8 @@ namespace WebAgent.Controllers
         private readonly IMessageService _messageService;
         private readonly AgentOptions _walletOptions;
 
+        private readonly IEdgeClientService _edgeClientService;
+
         public ConnectionsController(
             IEventAggregator eventAggregator,
             IConnectionService connectionService, 
@@ -40,6 +43,7 @@ namespace WebAgent.Controllers
             IProvisioningService provisioningService,
             IAgentProvider agentContextProvider,
             IMessageService messageService,
+            IEdgeClientService edgeClientService,
             IOptions<AgentOptions> walletOptions)
         {
             _eventAggregator = eventAggregator;
@@ -49,6 +53,7 @@ namespace WebAgent.Controllers
             _provisioningService = provisioningService;
             _agentContextProvider = agentContextProvider;
             _messageService = messageService;
+            _edgeClientService = edgeClientService;
             _walletOptions = walletOptions.Value;
         }
 
@@ -56,6 +61,7 @@ namespace WebAgent.Controllers
         public async Task<IActionResult> Index()
         {
             var context = await _agentContextProvider.GetContextAsync();
+            await _edgeClientService.FetchInboxAsync(context);
 
             return View(new ConnectionsViewModel
             {
