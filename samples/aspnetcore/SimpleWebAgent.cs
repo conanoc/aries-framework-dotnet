@@ -20,8 +20,10 @@ namespace WebAgent
             AddHandler<TrustPingMessageHandler>();
             AddDiscoveryHandler();
             AddTrustPingHandler();
-            AddCredentialHandler();
-            AddProofHandler();
+            AddHandler<DefaultCredentialHandler>();
+            // AddCredentialHandler();
+            AddHandler<DefaultProofHandler>();
+            // AddProofHandler();
         }
     }
 }
